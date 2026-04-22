@@ -1,91 +1,189 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RA Muestra</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Realidad Aumentada - Muestra de Arte</title>
 
-  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    <!-- Librerías -->
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.0.0/dist/aframe-extras.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
-  <style>
-    html, body {
-      margin: 0;
-      overflow: hidden;
-      width: 100%;
-      height: 100%;
-      font-family: sans-serif;
-    }
+    <style>
+      html, body {
+        margin: 0;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
 
-    #startButton {
-      position: absolute;
-      z-index: 999;
-      width: 100%;
-      height: 100%;
-      background: black;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 22px;
-      cursor: pointer;
-    }
-  </style>
-</head>
+    <!--
+      CORRECCIONES APLICADAS:
+      1. filterMinCF y filterBeta → reduce el jitter del tracking
+      2. <a-assets> con <video> declarados correctamente → fix reproducción en móvil
+      3. Se reemplazó material+video en a-plane por src directo referenciando el asset
+      4. Comillas rotas en target 3 corregidas
+      5. Script de autoplay corregido para encontrar los <video> del DOM
+      6. Se agregó aframe-extras para mejor compatibilidad
+    -->
 
-<body>
+    <a-scene
+      mindar-image="
+        imageTargetSrc: ./targets.mind;
+        filterMinCF: 0.001;
+        filterBeta: 0.01;
+        warmupTolerance: 5;
+        missTolerance: 5;
+      "
+      color-space="sRGB"
+      renderer="colorManagement: true; physicallyCorrectLights: true"
+      vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: false"
+    >
 
-<div id="startButton">TOCAR PARA INICIAR</div>
+      <!-- ==============================
+           ASSETS: Pre-cargar todos los videos
+           Crítico para reproducción en iOS y Android
+           ============================== -->
+      <a-assets timeout="60000">
+        <video id="vid0"  src="./1_generaciones.mp4"  playsinline webkit-playsinline muted loop preload="auto" crossorigin="anonymous"></video>
+        <video id="vid1"  src="./2_abuela.mp4"        playsinline webkit-playsinline muted loop preload="auto" crossorigin="anonymous"></video>
+        <video id="vid2"  src="./3_adn.mp4"           playsinline webkit-playsinline muted loop preload="auto" crossorigin="anonymous"></video>
+        <video id="vid3"  src="./4_ciencia.mp4"       playsinline webkit-playsinline muted loop preload="auto" crossorigin="anonymous"></video>
+        <video id="vid4"  src="./5_familia.mp4"       playsinline webkit-playsinline muted loop preload="auto" crossorigin="anonymous"></video>
+        <video id="vid5"  src="./6_garabatos.mp4"     playsinline webkit-playsinline muted loop preload="auto" crossorigin="anonymous"></video>
+        <video id="vid6"  src="./7_hermanas.mp4"      playsinline webkit-playsinline muted loop preload="auto" crossorigin="anonymous"></video>
+        <video id="vid7"  src="./8_hermanos.mp4"      playsinline webkit-playsinline muted loop preload="auto" crossorigin="anonymous"></video>
+        <video id="vid8"  src="./9_juicio.mp4"        playsinline webkit-playsinline muted loop preload="auto" crossorigin="anonymous"></video>
+        <video id="vid9"  src="./10_regalo.mp4"       playsinline webkit-playsinline muted loop preload="auto" crossorigin="anonymous"></video>
+        <video id="vid10" src="./11_resolucion.mp4"   playsinline webkit-playsinline muted loop preload="auto" crossorigin="anonymous"></video>
+      </a-assets>
 
-<a-scene
-  mindar-image="imageTargetSrc: ./targets.mind;"
-  vr-mode-ui="enabled: false"
-  device-orientation-permission-ui="enabled: false"
-  renderer="colorManagement: true;"
-  embedded
->
+      <!-- Cámara fija (requerida por MindAR) -->
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-  <a-assets>
-    <video id="vid0" src="./1_generaciones.mp4"
-      autoplay
-      muted
-      loop
-      playsinline
-      webkit-playsinline
-      crossorigin="anonymous">
-    </video>
-  </a-assets>
+      <!-- Target 0: generaciones (paisaje 16:9) -->
+      <a-entity mindar-image-target="targetIndex: 0">
+        <a-plane width="1.6" height="0.9" position="0 0 0"
+          material="shader: flat; src: #vid0; side: double">
+        </a-plane>
+      </a-entity>
 
-  <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+      <!-- Target 1: abuela (paisaje 16:9) -->
+      <a-entity mindar-image-target="targetIndex: 1">
+        <a-plane width="1.6" height="0.9" position="0 0 0"
+          material="shader: flat; src: #vid1; side: double">
+        </a-plane>
+      </a-entity>
 
-  <a-entity mindar-image-target="targetIndex: 0">
-    <a-plane width="1.6" height="0.9"
-      material="shader: flat; src: #vid0">
-    </a-plane>
-  </a-entity>
+      <!-- Target 2: adn (paisaje 16:9) -->
+      <a-entity mindar-image-target="targetIndex: 2">
+        <a-plane width="1.6" height="0.9" position="0 0 0"
+          material="shader: flat; src: #vid2; side: double">
+        </a-plane>
+      </a-entity>
 
-</a-scene>
+      <!-- Target 3: ciencia (retrato 9:16) -->
+      <a-entity mindar-image-target="targetIndex: 3">
+        <a-plane width="0.9" height="1.6" position="0 0 0"
+          material="shader: flat; src: #vid3; side: double">
+        </a-plane>
+      </a-entity>
 
-<script>
-  const startButton = document.querySelector("#startButton");
-  const sceneEl = document.querySelector("a-scene");
+      <!-- Target 4: familia (paisaje 16:9) -->
+      <a-entity mindar-image-target="targetIndex: 4">
+        <a-plane width="1.6" height="0.9" position="0 0 0"
+          material="shader: flat; src: #vid4; side: double">
+        </a-plane>
+      </a-entity>
 
-  startButton.addEventListener("click", async () => {
+      <!-- Target 5: garabatos (retrato 9:16) -->
+      <a-entity mindar-image-target="targetIndex: 5">
+        <a-plane width="0.9" height="1.6" position="0 0 0"
+          material="shader: flat; src: #vid5; side: double">
+        </a-plane>
+      </a-entity>
 
-    startButton.style.display = "none";
+      <!-- Target 6: hermanas (paisaje 16:9) -->
+      <a-entity mindar-image-target="targetIndex: 6">
+        <a-plane width="1.6" height="0.9" position="0 0 0"
+          material="shader: flat; src: #vid6; side: double">
+        </a-plane>
+      </a-entity>
 
-    // 👉 Arranca MindAR manualmente (CLAVE para iOS)
-    const mindarSystem = sceneEl.systems["mindar-image-system"];
-    await mindarSystem.start();
+      <!-- Target 7: hermanos (paisaje 16:9) -->
+      <a-entity mindar-image-target="targetIndex: 7">
+        <a-plane width="1.6" height="0.9" position="0 0 0"
+          material="shader: flat; src: #vid7; side: double">
+        </a-plane>
+      </a-entity>
 
-    // 👉 Forzar reproducción de videos
-    const videos = document.querySelectorAll("video");
-    videos.forEach(video => {
-      video.play().catch(e => console.log("Autoplay bloqueado:", e));
-    });
+      <!-- Target 8: juicio (paisaje 16:9) -->
+      <a-entity mindar-image-target="targetIndex: 8">
+        <a-plane width="1.6" height="0.9" position="0 0 0"
+          material="shader: flat; src: #vid8; side: double">
+        </a-plane>
+      </a-entity>
 
-  });
-</script>
+      <!-- Target 9: regalo (paisaje 16:9) -->
+      <a-entity mindar-image-target="targetIndex: 9">
+        <a-plane width="1.6" height="0.9" position="0 0 0"
+          material="shader: flat; src: #vid9; side: double">
+        </a-plane>
+      </a-entity>
 
-</body>
+      <!-- Target 10: resolucion (paisaje 16:9) -->
+      <a-entity mindar-image-target="targetIndex: 10">
+        <a-plane width="1.6" height="0.9" position="0 0 0"
+          material="shader: flat; src: #vid10; side: double">
+        </a-plane>
+      </a-entity>
+
+    </a-scene>
+
+    <script>
+      // ============================================================
+      // AUTOPLAY en móvil: cuando un target es detectado,
+      // se reproduce su video. Cuando se pierde, se pausa.
+      // Esto es necesario porque iOS/Android bloquean autoplay
+      // salvo que sea gatillado por interacción o evento del sistema.
+      // ============================================================
+
+      AFRAME.registerComponent('ar-video-controller', {
+        schema: { videoId: { type: 'string' } },
+        init: function () {
+          const videoEl = document.querySelector(this.data.videoId);
+          const entity = this.el;
+
+          entity.addEventListener('targetFound', function () {
+            if (videoEl) {
+              videoEl.currentTime = 0;
+              videoEl.play().catch(function(e) {
+                console.warn('Play bloqueado:', e);
+              });
+            }
+          });
+
+          entity.addEventListener('targetLost', function () {
+            if (videoEl) {
+              videoEl.pause();
+            }
+          });
+        }
+      });
+
+      // Asignar el componente a cada target una vez cargada la escena
+      document.querySelector('a-scene').addEventListener('loaded', function () {
+        const targets = document.querySelectorAll('[mindar-image-target]');
+        targets.forEach(function(target, index) {
+          target.setAttribute('ar-video-controller', 'videoId: #vid' + index);
+        });
+      });
+    </script>
+
+  </body>
 </html>
