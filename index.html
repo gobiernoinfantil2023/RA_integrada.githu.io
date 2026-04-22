@@ -29,135 +29,91 @@
       device-orientation-permission-ui="enabled: false"
     >
 
-      <a-assets timeout="10000">
-        <!-- Solo el .mind se pre-carga; los videos son lazy para no colapsar iOS -->
+      <!-- 
+        preload="none" + sin timeout en a-assets:
+        iOS no intenta cargar los videos al inicio, evitando el colapso de memoria.
+        Los videos se cargan al llamar a .load() + .play() en targetFound.
+      -->
+      <a-assets>
+        <video id="vid0"  src="./1_generaciones.mp4"  playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
+        <video id="vid1"  src="./2_abuela.mp4"        playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
+        <video id="vid2"  src="./3_adn.mp4"           playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
+        <video id="vid3"  src="./4_ciencia.mp4"       playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
+        <video id="vid4"  src="./5_familia.mp4"       playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
+        <video id="vid5"  src="./6_garabatos.mp4"     playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
+        <video id="vid6"  src="./7_hermanas.mp4"      playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
+        <video id="vid7"  src="./8_hermanos.mp4"      playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
+        <video id="vid8"  src="./9_juicio.mp4"        playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
+        <video id="vid9"  src="./10_regalo.mp4"       playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
+        <video id="vid10" src="./11_resolucion.mp4"   playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
+      <!-- Los planes referencian los videos por ID, igual que la versión Android -->
       <a-entity id="target0"  mindar-image-target="targetIndex: 0">
-        <a-plane id="plane0"  width="1.6" height="0.9" position="0 0 0" material="shader: flat; side: double"></a-plane>
+        <a-plane width="1.6" height="0.9" position="0 0 0" material="shader: flat; src: #vid0;  side: double"></a-plane>
       </a-entity>
       <a-entity id="target1"  mindar-image-target="targetIndex: 1">
-        <a-plane id="plane1"  width="1.6" height="0.9" position="0 0 0" material="shader: flat; side: double"></a-plane>
+        <a-plane width="1.6" height="0.9" position="0 0 0" material="shader: flat; src: #vid1;  side: double"></a-plane>
       </a-entity>
       <a-entity id="target2"  mindar-image-target="targetIndex: 2">
-        <a-plane id="plane2"  width="1.6" height="0.9" position="0 0 0" material="shader: flat; side: double"></a-plane>
+        <a-plane width="1.6" height="0.9" position="0 0 0" material="shader: flat; src: #vid2;  side: double"></a-plane>
       </a-entity>
       <a-entity id="target3"  mindar-image-target="targetIndex: 3">
-        <a-plane id="plane3"  width="0.9" height="1.6" position="0 0 0" material="shader: flat; side: double"></a-plane>
+        <a-plane width="0.9" height="1.6" position="0 0 0" material="shader: flat; src: #vid3;  side: double"></a-plane>
       </a-entity>
       <a-entity id="target4"  mindar-image-target="targetIndex: 4">
-        <a-plane id="plane4"  width="1.6" height="0.9" position="0 0 0" material="shader: flat; side: double"></a-plane>
+        <a-plane width="1.6" height="0.9" position="0 0 0" material="shader: flat; src: #vid4;  side: double"></a-plane>
       </a-entity>
       <a-entity id="target5"  mindar-image-target="targetIndex: 5">
-        <a-plane id="plane5"  width="0.9" height="1.6" position="0 0 0" material="shader: flat; side: double"></a-plane>
+        <a-plane width="0.9" height="1.6" position="0 0 0" material="shader: flat; src: #vid5;  side: double"></a-plane>
       </a-entity>
       <a-entity id="target6"  mindar-image-target="targetIndex: 6">
-        <a-plane id="plane6"  width="1.6" height="0.9" position="0 0 0" material="shader: flat; side: double"></a-plane>
+        <a-plane width="1.6" height="0.9" position="0 0 0" material="shader: flat; src: #vid6;  side: double"></a-plane>
       </a-entity>
       <a-entity id="target7"  mindar-image-target="targetIndex: 7">
-        <a-plane id="plane7"  width="1.6" height="0.9" position="0 0 0" material="shader: flat; side: double"></a-plane>
+        <a-plane width="1.6" height="0.9" position="0 0 0" material="shader: flat; src: #vid7;  side: double"></a-plane>
       </a-entity>
       <a-entity id="target8"  mindar-image-target="targetIndex: 8">
-        <a-plane id="plane8"  width="1.6" height="0.9" position="0 0 0" material="shader: flat; side: double"></a-plane>
+        <a-plane width="1.6" height="0.9" position="0 0 0" material="shader: flat; src: #vid8;  side: double"></a-plane>
       </a-entity>
       <a-entity id="target9"  mindar-image-target="targetIndex: 9">
-        <a-plane id="plane9"  width="1.6" height="0.9" position="0 0 0" material="shader: flat; side: double"></a-plane>
+        <a-plane width="1.6" height="0.9" position="0 0 0" material="shader: flat; src: #vid9;  side: double"></a-plane>
       </a-entity>
       <a-entity id="target10" mindar-image-target="targetIndex: 10">
-        <a-plane id="plane10" width="1.6" height="0.9" position="0 0 0" material="shader: flat; side: double"></a-plane>
+        <a-plane width="1.6" height="0.9" position="0 0 0" material="shader: flat; src: #vid10; side: double"></a-plane>
       </a-entity>
 
     </a-scene>
 
     <script>
-      // Mapa de índice → archivo de video
-      const VIDEO_MAP = {
-        0:  './1_generaciones.mp4',
-        1:  './2_abuela.mp4',
-        2:  './3_adn.mp4',
-        3:  './4_ciencia.mp4',
-        4:  './5_familia.mp4',
-        5:  './6_garabatos.mp4',
-        6:  './7_hermanas.mp4',
-        7:  './8_hermanos.mp4',
-        8:  './9_juicio.mp4',
-        9:  './10_regalo.mp4',
-        10: './11_resolucion.mp4'
-      };
-
-      // Cache: evita recrear el mismo <video> dos veces
-      const videoCache = {};
-
-      function getOrCreateVideo(index) {
-        if (videoCache[index]) return videoCache[index];
-        const v = document.createElement('video');
-        v.src         = VIDEO_MAP[index];
-        v.muted       = true;
-        v.loop        = true;
-        v.playsInline = true;
-        v.setAttribute('playsinline', '');
-        v.setAttribute('webkit-playsinline', '');
-        v.preload     = 'auto';
-        v.crossOrigin = 'anonymous';
-        v.load();
-        videoCache[index] = v;
-        return v;
-      }
-
-      // Componente lazy-video: crea el <video> solo al detectar el target
-      AFRAME.registerComponent('lazy-video', {
-        schema: { index: { type: 'int' } },
+      AFRAME.registerComponent('ar-video-controller', {
+        schema: { videoId: { type: 'string' } },
         init: function () {
-          const index  = this.data.index;
-          const entity = this.el;
-          const plane  = entity.querySelector('a-plane');
+          const videoEl = document.querySelector(this.data.videoId);
+          const entity  = this.el;
 
           entity.addEventListener('targetFound', function () {
-            const vid = getOrCreateVideo(index);
-
-            // Asignar la textura directamente al material Three.js
-            const mat = plane.components.material.material;
-            if (mat.map) {
-              mat.map.image        = vid;
-              mat.map.needsUpdate  = true;
-            } else {
-              // Primera vez: crear la textura
-              const THREE = AFRAME.THREE;
-              const tex   = new THREE.VideoTexture(vid);
-              mat.map          = tex;
-              mat.needsUpdate  = true;
-            }
-
-            vid.currentTime = 0;
-            vid.play().catch(function(e) {
-              setTimeout(function() { vid.play().catch(function(){}); }, 300);
+            if (!videoEl) return;
+            // .load() es clave en iOS: fuerza la carga del video si preload="none"
+            videoEl.load();
+            videoEl.currentTime = 0;
+            videoEl.play().catch(function(e) {
+              setTimeout(function() { videoEl.play().catch(function(){}); }, 300);
             });
-
-            // RAF para mantener la textura actualizada frame a frame
-            function tick() {
-              if (plane.components.material && plane.components.material.material.map) {
-                plane.components.material.material.map.needsUpdate = true;
-              }
-              entity._raf = requestAnimationFrame(tick);
-            }
-            entity._raf = requestAnimationFrame(tick);
           });
 
           entity.addEventListener('targetLost', function () {
-            const vid = videoCache[index];
-            if (vid) vid.pause();
-            if (entity._raf) { cancelAnimationFrame(entity._raf); entity._raf = null; }
+            if (videoEl) videoEl.pause();
           });
         }
       });
 
-      // Asignar el componente a cada target cuando la escena termina de cargar
       document.querySelector('a-scene').addEventListener('loaded', function () {
         for (var i = 0; i <= 10; i++) {
           var t = document.getElementById('target' + i);
-          if (t) t.setAttribute('lazy-video', 'index: ' + i);
+          if (t) t.setAttribute('ar-video-controller', 'videoId: #vid' + i);
         }
       });
     </script>
