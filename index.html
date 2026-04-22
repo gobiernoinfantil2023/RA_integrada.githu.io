@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Realidad Aumentada - Muestra de Arte</title>
 
-    <!-- Librerías -->
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.0.0/dist/aframe-extras.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
@@ -21,11 +20,7 @@
         font-family: 'Georgia', serif;
       }
 
-      /* ==============================
-         PANTALLA DE INICIO (splash)
-         Necesaria para iOS: requiere interacción
-         del usuario antes de acceder a la cámara
-         ============================== */
+      /* Splash encima de todo */
       #splash {
         position: fixed;
         inset: 0;
@@ -42,7 +37,7 @@
         transition: opacity 0.6s ease;
       }
 
-      #splash.hidden {
+      #splash.oculto {
         opacity: 0;
         pointer-events: none;
       }
@@ -52,7 +47,6 @@
         font-weight: normal;
         letter-spacing: 0.08em;
         line-height: 1.3;
-        color: #f0ede6;
       }
 
       #splash .subtitulo {
@@ -83,10 +77,14 @@
         -webkit-tap-highlight-color: transparent;
       }
 
-      #btn-iniciar:active,
-      #btn-iniciar:hover {
+      #btn-iniciar:active {
         background: #f0ede6;
         color: #0a0a0a;
+      }
+
+      #btn-iniciar.cargando {
+        opacity: 0.5;
+        pointer-events: none;
       }
 
       #splash .nota {
@@ -94,51 +92,131 @@
         color: #5a5550;
         letter-spacing: 0.04em;
       }
-
-      /* La escena A-Frame queda oculta hasta que se presione el botón */
-      #ar-container {
-        display: none;
-        width: 100%;
-        height: 100%;
-      }
-
-      #ar-container.visible {
-        display: block;
-      }
-
-      a-scene {
-        width: 100%;
-        height: 100%;
-      }
     </style>
   </head>
   <body>
 
-    <!-- ==============================
-         SPLASH SCREEN
-         CRÍTICO para iOS Safari:
-         getUserMedia y WebGL necesitan un
-         gesto del usuario para activarse.
-         Sin esto → pantalla celeste congelada.
-         ============================== -->
+    <!-- Splash: visible hasta que el usuario toca -->
     <div id="splash">
       <div class="titulo">Muestra de Arte<br>en Realidad Aumentada</div>
       <div class="linea"></div>
       <div class="subtitulo">
         Apuntá la cámara hacia las imágenes de la muestra para ver los videos
       </div>
-      <button id="btn-iniciar" onclick="iniciarAR()">
-        COMENZAR
-      </button>
+      <button id="btn-iniciar">COMENZAR</button>
       <div class="nota">Se solicitará permiso para usar la cámara</div>
     </div>
 
-    <!-- La escena AR se inyecta aquí al presionar el botón -->
-    <div id="ar-container"></div>
+    <!--
+      LA ESCENA EXISTE EN EL HTML DESDE EL INICIO (no se inyecta dinámicamente).
+      autoStart: false  →  MindAR NO arranca la cámara automáticamente.
+      El botón llama a arSystem.start() dentro del click handler,
+      que es el gesto de usuario que iOS necesita para permitir la cámara.
+      preload="none"  →  los videos no bloquean la carga inicial de la escena.
+    -->
+    <a-scene
+      id="escena"
+      mindar-image="
+        imageTargetSrc: ./targets.mind;
+        autoStart: false;
+        filterMinCF: 0.001;
+        filterBeta: 0.01;
+        warmupTolerance: 5;
+        missTolerance: 5;
+      "
+      color-space="sRGB"
+      renderer="colorManagement: true; physicallyCorrectLights: true"
+      vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: false"
+    >
+
+      <a-assets timeout="30000">
+        <video id="vid0"  src="./1_generaciones.mp4"  playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
+        <video id="vid1"  src="./2_abuela.mp4"        playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
+        <video id="vid2"  src="./3_adn.mp4"           playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
+        <video id="vid3"  src="./4_ciencia.mp4"       playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
+        <video id="vid4"  src="./5_familia.mp4"       playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
+        <video id="vid5"  src="./6_garabatos.mp4"     playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
+        <video id="vid6"  src="./7_hermanas.mp4"      playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
+        <video id="vid7"  src="./8_hermanos.mp4"      playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
+        <video id="vid8"  src="./9_juicio.mp4"        playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
+        <video id="vid9"  src="./10_regalo.mp4"       playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
+        <video id="vid10" src="./11_resolucion.mp4"   playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
+      </a-assets>
+
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+      <!-- Target 0: generaciones (paisaje 16:9) -->
+      <a-entity mindar-image-target="targetIndex: 0">
+        <a-plane width="1.6" height="0.9" position="0 0 0"
+          material="shader: flat; src: #vid0; side: double"></a-plane>
+      </a-entity>
+
+      <!-- Target 1: abuela (paisaje 16:9) -->
+      <a-entity mindar-image-target="targetIndex: 1">
+        <a-plane width="1.6" height="0.9" position="0 0 0"
+          material="shader: flat; src: #vid1; side: double"></a-plane>
+      </a-entity>
+
+      <!-- Target 2: adn (paisaje 16:9) -->
+      <a-entity mindar-image-target="targetIndex: 2">
+        <a-plane width="1.6" height="0.9" position="0 0 0"
+          material="shader: flat; src: #vid2; side: double"></a-plane>
+      </a-entity>
+
+      <!-- Target 3: ciencia (retrato 9:16) -->
+      <a-entity mindar-image-target="targetIndex: 3">
+        <a-plane width="0.9" height="1.6" position="0 0 0"
+          material="shader: flat; src: #vid3; side: double"></a-plane>
+      </a-entity>
+
+      <!-- Target 4: familia (paisaje 16:9) -->
+      <a-entity mindar-image-target="targetIndex: 4">
+        <a-plane width="1.6" height="0.9" position="0 0 0"
+          material="shader: flat; src: #vid4; side: double"></a-plane>
+      </a-entity>
+
+      <!-- Target 5: garabatos (retrato 9:16) -->
+      <a-entity mindar-image-target="targetIndex: 5">
+        <a-plane width="0.9" height="1.6" position="0 0 0"
+          material="shader: flat; src: #vid5; side: double"></a-plane>
+      </a-entity>
+
+      <!-- Target 6: hermanas (paisaje 16:9) -->
+      <a-entity mindar-image-target="targetIndex: 6">
+        <a-plane width="1.6" height="0.9" position="0 0 0"
+          material="shader: flat; src: #vid6; side: double"></a-plane>
+      </a-entity>
+
+      <!-- Target 7: hermanos (paisaje 16:9) -->
+      <a-entity mindar-image-target="targetIndex: 7">
+        <a-plane width="1.6" height="0.9" position="0 0 0"
+          material="shader: flat; src: #vid7; side: double"></a-plane>
+      </a-entity>
+
+      <!-- Target 8: juicio (paisaje 16:9) -->
+      <a-entity mindar-image-target="targetIndex: 8">
+        <a-plane width="1.6" height="0.9" position="0 0 0"
+          material="shader: flat; src: #vid8; side: double"></a-plane>
+      </a-entity>
+
+      <!-- Target 9: regalo (paisaje 16:9) -->
+      <a-entity mindar-image-target="targetIndex: 9">
+        <a-plane width="1.6" height="0.9" position="0 0 0"
+          material="shader: flat; src: #vid9; side: double"></a-plane>
+      </a-entity>
+
+      <!-- Target 10: resolucion (paisaje 16:9) -->
+      <a-entity mindar-image-target="targetIndex: 10">
+        <a-plane width="1.6" height="0.9" position="0 0 0"
+          material="shader: flat; src: #vid10; side: double"></a-plane>
+      </a-entity>
+
+    </a-scene>
 
     <script>
       // ============================================================
-      // COMPONENTE: controla play/pause de video por target
+      // COMPONENTE: play/pause de video según detección de target
       // ============================================================
       AFRAME.registerComponent('ar-video-controller', {
         schema: { videoId: { type: 'string' } },
@@ -163,150 +241,60 @@
         }
       });
 
+      // Asignar controlador a cada target cuando la escena esté lista
+      document.getElementById('escena').addEventListener('loaded', function () {
+        document.querySelectorAll('[mindar-image-target]').forEach(function(target, index) {
+          target.setAttribute('ar-video-controller', 'videoId: #vid' + index);
+        });
+      });
+
       // ============================================================
-      // FUNCIÓN PRINCIPAL: se llama al tocar "COMENZAR"
+      // BOTÓN COMENZAR
       //
-      // POR QUÉ así y no con autoarranque:
-      // - iOS Safari requiere un gesto explícito del usuario para:
-      //   1. Acceder a getUserMedia (cámara)
-      //   2. Crear contextos WebGL
-      //   3. Reproducir videos
-      // - Si A-Frame se inicializa sin ese gesto → pantalla celeste
-      // - Inyectando el HTML de la escena DESPUÉS del toque,
-      //   todo ocurre dentro del contexto del gesto del usuario.
-      //
-      // TAMBIÉN: los videos NO se precargan todos juntos en <a-assets>.
-      // En iOS con 11 videos, el timeout de assets falla y bloquea
-      // la escena entera. Se crean como elementos del DOM directamente
-      // y se asignan como src a los planos.
+      // La clave: arSystem.start() se llama DENTRO del click handler.
+      // iOS solo permite getUserMedia cuando hay un gesto activo del usuario.
+      // También se hace play()+pause() en todos los videos para
+      // desbloquear su reproducción futura en iOS.
       // ============================================================
-      function iniciarAR() {
-        // Ocultar splash
-        const splash = document.getElementById('splash');
-        splash.classList.add('hidden');
-        setTimeout(() => splash.remove(), 700);
+      document.getElementById('btn-iniciar').addEventListener('click', function () {
+        const btn = this;
+        btn.textContent = 'ABRIENDO CÁMARA';
+        btn.classList.add('cargando');
 
-        // Mostrar contenedor AR
-        const container = document.getElementById('ar-container');
-        container.classList.add('visible');
-
-        // Inyectar la escena A-Frame completa
-        // (DENTRO del handler del click = gesto de usuario válido en iOS)
-        container.innerHTML = `
-          <a-scene
-            mindar-image="
-              imageTargetSrc: ./targets.mind;
-              filterMinCF: 0.001;
-              filterBeta: 0.01;
-              warmupTolerance: 5;
-              missTolerance: 5;
-            "
-            color-space="sRGB"
-            renderer="colorManagement: true; physicallyCorrectLights: true"
-            vr-mode-ui="enabled: false"
-            device-orientation-permission-ui="enabled: false"
-          >
-            <a-assets timeout="30000">
-              <video id="vid0"  src="./1_generaciones.mp4"  playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
-              <video id="vid1"  src="./2_abuela.mp4"        playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
-              <video id="vid2"  src="./3_adn.mp4"           playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
-              <video id="vid3"  src="./4_ciencia.mp4"       playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
-              <video id="vid4"  src="./5_familia.mp4"       playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
-              <video id="vid5"  src="./6_garabatos.mp4"     playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
-              <video id="vid6"  src="./7_hermanas.mp4"      playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
-              <video id="vid7"  src="./8_hermanos.mp4"      playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
-              <video id="vid8"  src="./9_juicio.mp4"        playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
-              <video id="vid9"  src="./10_regalo.mp4"       playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
-              <video id="vid10" src="./11_resolucion.mp4"   playsinline webkit-playsinline muted loop preload="none" crossorigin="anonymous"></video>
-            </a-assets>
-
-            <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
-
-            <!-- Target 0: generaciones (paisaje 16:9) -->
-            <a-entity mindar-image-target="targetIndex: 0">
-              <a-plane width="1.6" height="0.9" position="0 0 0"
-                material="shader: flat; src: #vid0; side: double"></a-plane>
-            </a-entity>
-
-            <!-- Target 1: abuela (paisaje 16:9) -->
-            <a-entity mindar-image-target="targetIndex: 1">
-              <a-plane width="1.6" height="0.9" position="0 0 0"
-                material="shader: flat; src: #vid1; side: double"></a-plane>
-            </a-entity>
-
-            <!-- Target 2: adn (paisaje 16:9) -->
-            <a-entity mindar-image-target="targetIndex: 2">
-              <a-plane width="1.6" height="0.9" position="0 0 0"
-                material="shader: flat; src: #vid2; side: double"></a-plane>
-            </a-entity>
-
-            <!-- Target 3: ciencia (retrato 9:16) -->
-            <a-entity mindar-image-target="targetIndex: 3">
-              <a-plane width="0.9" height="1.6" position="0 0 0"
-                material="shader: flat; src: #vid3; side: double"></a-plane>
-            </a-entity>
-
-            <!-- Target 4: familia (paisaje 16:9) -->
-            <a-entity mindar-image-target="targetIndex: 4">
-              <a-plane width="1.6" height="0.9" position="0 0 0"
-                material="shader: flat; src: #vid4; side: double"></a-plane>
-            </a-entity>
-
-            <!-- Target 5: garabatos (retrato 9:16) -->
-            <a-entity mindar-image-target="targetIndex: 5">
-              <a-plane width="0.9" height="1.6" position="0 0 0"
-                material="shader: flat; src: #vid5; side: double"></a-plane>
-            </a-entity>
-
-            <!-- Target 6: hermanas (paisaje 16:9) -->
-            <a-entity mindar-image-target="targetIndex: 6">
-              <a-plane width="1.6" height="0.9" position="0 0 0"
-                material="shader: flat; src: #vid6; side: double"></a-plane>
-            </a-entity>
-
-            <!-- Target 7: hermanos (paisaje 16:9) -->
-            <a-entity mindar-image-target="targetIndex: 7">
-              <a-plane width="1.6" height="0.9" position="0 0 0"
-                material="shader: flat; src: #vid7; side: double"></a-plane>
-            </a-entity>
-
-            <!-- Target 8: juicio (paisaje 16:9) -->
-            <a-entity mindar-image-target="targetIndex: 8">
-              <a-plane width="1.6" height="0.9" position="0 0 0"
-                material="shader: flat; src: #vid8; side: double"></a-plane>
-            </a-entity>
-
-            <!-- Target 9: regalo (paisaje 16:9) -->
-            <a-entity mindar-image-target="targetIndex: 9">
-              <a-plane width="1.6" height="0.9" position="0 0 0"
-                material="shader: flat; src: #vid9; side: double"></a-plane>
-            </a-entity>
-
-            <!-- Target 10: resolucion (paisaje 16:9) -->
-            <a-entity mindar-image-target="targetIndex: 10">
-              <a-plane width="1.6" height="0.9" position="0 0 0"
-                material="shader: flat; src: #vid10; side: double"></a-plane>
-            </a-entity>
-
-          </a-scene>
-        `;
-
-        // Asignar controlador de video a cada target
-        const scene = container.querySelector('a-scene');
-        scene.addEventListener('loaded', function () {
-          const targets = scene.querySelectorAll('[mindar-image-target]');
-          targets.forEach(function(target, index) {
-            target.setAttribute('ar-video-controller', 'videoId: #vid' + index);
-          });
+        // Unlock de videos dentro del mismo gesto (obligatorio en iOS)
+        document.querySelectorAll('video').forEach(function(v) {
+          v.play().then(function() { v.pause(); }).catch(function() {});
         });
 
-        // FIX iOS adicional: "unlockear" el contexto de audio/video
-        // tocando silenciosamente todos los videos en el mismo gesto
-        const allVideos = container.querySelectorAll('video');
-        allVideos.forEach(function(v) {
-          v.play().then(() => v.pause()).catch(() => {});
-        });
-      }
+        const escena = document.getElementById('escena');
+
+        function arrancarAR() {
+          const arSystem = escena.systems['mindar-image-system'];
+          if (!arSystem) {
+            console.warn('arSystem aún no disponible');
+            return;
+          }
+
+          arSystem.start();
+
+          // Ocultar splash cuando MindAR confirme que arrancó
+          escena.addEventListener('arReady', function () {
+            document.getElementById('splash').classList.add('oculto');
+          }, { once: true });
+
+          // Fallback: si arReady no llega en 10s, ocultar igual
+          setTimeout(function () {
+            document.getElementById('splash').classList.add('oculto');
+          }, 10000);
+        }
+
+        // Si la escena ya cargó, arrancar directo; si no, esperar
+        if (escena.hasLoaded) {
+          arrancarAR();
+        } else {
+          escena.addEventListener('loaded', arrancarAR, { once: true });
+        }
+      });
     </script>
 
   </body>
