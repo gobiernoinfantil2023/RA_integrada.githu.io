@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Realidad Aumentada - Muestra de Arte</title>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Realidad Aumentada - Muestra de Arte</title>
+    <!-- Librerías necesarias -->
 
     <!-- Librerías -->
-    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+<script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.0.0/dist/aframe-extras.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
     <style>
       html, body {
@@ -18,8 +19,9 @@
         height: 100%;
       }
     </style>
-  </head>
-  <body>
+</head>
+<body>
+    <!-- Escena de A-Frame con MindAR -->
 
     <!--
       CORRECCIONES APLICADAS:
@@ -31,7 +33,8 @@
       6. Se agregó aframe-extras para mejor compatibilidad
     -->
 
-    <a-scene
+<a-scene
+      mindar-image="imageTargetSrc: ./targets.mind;"
       mindar-image="
         imageTargetSrc: ./targets.mind;
         filterMinCF: 0.001;
@@ -39,11 +42,13 @@
         warmupTolerance: 5;
         missTolerance: 5;
       "
-      color-space="sRGB"
+color-space="sRGB"
+      renderer="colorManagement: true, physicallyCorrectLights"
       renderer="colorManagement: true; physicallyCorrectLights: true"
-      vr-mode-ui="enabled: false"
-      device-orientation-permission-ui="enabled: false"
-    >
+vr-mode-ui="enabled: false"
+device-orientation-permission-ui="enabled: false"
+>
+      <!-- Cámara fija (necesaria para tracking) -->
 
       <!-- ==============================
            ASSETS: Pre-cargar todos los videos
@@ -64,88 +69,186 @@
       </a-assets>
 
       <!-- Cámara fija (requerida por MindAR) -->
-      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+<a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
+      <!-- Target 0: generaciones -->
       <!-- Target 0: generaciones (paisaje 16:9) -->
-      <a-entity mindar-image-target="targetIndex: 0">
+<a-entity mindar-image-target="targetIndex: 0">
+        <a-plane
+          width="1.6"
+          height="0.9"
+          position="0 0 -0.5"
+          material="src: url(./1_generaciones.mp4); shader: flat; side: double"
+          video="autoplay: true; loop: true; mute: true"
+        ></a-plane>
         <a-plane width="1.6" height="0.9" position="0 0 0"
           material="shader: flat; src: #vid0; side: double">
         </a-plane>
-      </a-entity>
+</a-entity>
 
+      <!-- Target 1: abuela -->
       <!-- Target 1: abuela (paisaje 16:9) -->
-      <a-entity mindar-image-target="targetIndex: 1">
+<a-entity mindar-image-target="targetIndex: 1">
+        <a-plane
+          width="1.6"
+          height="0.9"
+          position="0 0 -0.5"
+          material="src: url(./2_abuela.mp4); shader: flat; side: double"
+          video="autoplay: true; loop: true; mute: true"
+        ></a-plane>
         <a-plane width="1.6" height="0.9" position="0 0 0"
           material="shader: flat; src: #vid1; side: double">
         </a-plane>
-      </a-entity>
+</a-entity>
 
+      <!-- Target 2: adn -->
       <!-- Target 2: adn (paisaje 16:9) -->
-      <a-entity mindar-image-target="targetIndex: 2">
+<a-entity mindar-image-target="targetIndex: 2">
+        <a-plane
+          width="1.6"
+          height="0.9"
+          position="0 0 -0.5"
+          material="src: url(./3_adn.mp4); shader: flat; side: double"
+          video="autoplay: true; loop: true; mute: true"
+        ></a-plane>
         <a-plane width="1.6" height="0.9" position="0 0 0"
           material="shader: flat; src: #vid2; side: double">
         </a-plane>
-      </a-entity>
+</a-entity>
 
+      <!-- Target 3: ciencia -->
       <!-- Target 3: ciencia (retrato 9:16) -->
-      <a-entity mindar-image-target="targetIndex: 3">
+<a-entity mindar-image-target="targetIndex: 3">
+        <a-plane
+          width="0.9"
+          height="1.6"
+          position="0 0 -0.5"
+          material="src: url(./4_ciencia.mp4); shader: flat; side: double"
+          video=""autoplay: true; loop: true; mute: true""
+        ></a-plane>
         <a-plane width="0.9" height="1.6" position="0 0 0"
           material="shader: flat; src: #vid3; side: double">
         </a-plane>
-      </a-entity>
+</a-entity>
 
+      <!-- Target 4: familia -->
       <!-- Target 4: familia (paisaje 16:9) -->
-      <a-entity mindar-image-target="targetIndex: 4">
+<a-entity mindar-image-target="targetIndex: 4">
+        <a-plane
+          width="1.6"
+          height="0.9"
+          position="0 0 -0.5"
+          material="src: url(./5_familia.mp4); shader: flat; side: double"
+          video="autoplay: true; loop: true; mute: true"
+        ></a-plane>
         <a-plane width="1.6" height="0.9" position="0 0 0"
           material="shader: flat; src: #vid4; side: double">
         </a-plane>
-      </a-entity>
+</a-entity>
 
+      <!-- Target 5: garabatos -->
       <!-- Target 5: garabatos (retrato 9:16) -->
-      <a-entity mindar-image-target="targetIndex: 5">
+<a-entity mindar-image-target="targetIndex: 5">
+        <a-plane
+          width="0.9"
+          height="1.6"
+          position="0 0 -0.5"
+          material="src: url(./6_garabatos.mp4); shader: flat; side: double"
+          video="autoplay: true; loop: true; mute: true"
+        ></a-plane>
         <a-plane width="0.9" height="1.6" position="0 0 0"
           material="shader: flat; src: #vid5; side: double">
         </a-plane>
-      </a-entity>
+</a-entity>
 
+      <!-- Target 6: hermanas -->
       <!-- Target 6: hermanas (paisaje 16:9) -->
-      <a-entity mindar-image-target="targetIndex: 6">
+<a-entity mindar-image-target="targetIndex: 6">
+        <a-plane
+          width="1.6"
+          height="0.9"
+          position="0 0 -0.5"
+          material="src: url(./7_hermanas.mp4); shader: flat; side: double"
+          video="autoplay: true; loop: true; mute: true"
+        ></a-plane>
         <a-plane width="1.6" height="0.9" position="0 0 0"
           material="shader: flat; src: #vid6; side: double">
         </a-plane>
-      </a-entity>
+</a-entity>
 
+      <!-- Target 7: hermanos -->
       <!-- Target 7: hermanos (paisaje 16:9) -->
-      <a-entity mindar-image-target="targetIndex: 7">
+<a-entity mindar-image-target="targetIndex: 7">
+        <a-plane
+          width="1.6"
+          height="0.9"
+          position="0 0 -0.5"
+          material="src: url(./8_hermanos.mp4); shader: flat; side: double"
+          video="autoplay: true; loop: true; mute: true"
+        ></a-plane>
         <a-plane width="1.6" height="0.9" position="0 0 0"
           material="shader: flat; src: #vid7; side: double">
         </a-plane>
-      </a-entity>
+</a-entity>
 
+      <!-- Target 8: juicio -->
       <!-- Target 8: juicio (paisaje 16:9) -->
-      <a-entity mindar-image-target="targetIndex: 8">
+<a-entity mindar-image-target="targetIndex: 8">
+        <a-plane
+          width="1.6"
+          height="0.9"
+          position="0 0 -0.5"
+          material="src: url(./9_juicio.mp4); shader: flat; side: double"
+          video="autoplay: true; loop: true; mute: true"
+        ></a-plane>
         <a-plane width="1.6" height="0.9" position="0 0 0"
           material="shader: flat; src: #vid8; side: double">
         </a-plane>
-      </a-entity>
+</a-entity>
 
+      <!-- Target 9: regalo -->
       <!-- Target 9: regalo (paisaje 16:9) -->
-      <a-entity mindar-image-target="targetIndex: 9">
+<a-entity mindar-image-target="targetIndex: 9">
+        <a-plane
+          width="1.6"
+          height="0.9"
+          position="0 0 -0.5"
+          material="src: url(./10_regalo.mp4); shader: flat; side: double"
+          video="autoplay: true; loop: true; mute: true"
+        ></a-plane>
         <a-plane width="1.6" height="0.9" position="0 0 0"
           material="shader: flat; src: #vid9; side: double">
         </a-plane>
-      </a-entity>
+</a-entity>
 
+      <!-- Target 10: resolucion -->
       <!-- Target 10: resolucion (paisaje 16:9) -->
-      <a-entity mindar-image-target="targetIndex: 10">
+<a-entity mindar-image-target="targetIndex: 10">
+        <a-plane
+          width="1.6"
+          height="0.9"
+          position="0 0 -0.5"
+          material="src: url(./11_resolucion.mp4); shader: flat; side: double"
+          video="autoplay: true; loop: true; mute: true"
+        ></a-plane>
         <a-plane width="1.6" height="0.9" position="0 0 0"
           material="shader: flat; src: #vid10; side: double">
         </a-plane>
-      </a-entity>
+</a-entity>
 
-    </a-scene>
+</a-scene>
 
-    <script>
+<!-- Script adicional para forzar reproducción (por si el navegador bloquea autoplay) -->
+<script>
+      window.addEventListener('load', function() {
+        // Esperar a que MindAR inicialice la cámara (aprox 1 segundo)
+        setTimeout(function() {
+          const videos = document.querySelectorAll('a-video');
+          videos.forEach(video => {
+            // El elemento a-video internamente crea un <video>
+            const videoElem = video.components?.material?.material?.map?.image?.video;
+            if (videoElem && videoElem.paused) {
+              videoElem.play().catch(e => console.log('Autoplay bloqueado, pero muted debería permitirlo:', e));
       // ============================================================
       // AUTOPLAY en móvil: cuando un target es detectado,
       // se reproduce su video. Cuando se pierde, se pausa.
@@ -171,8 +274,9 @@
           entity.addEventListener('targetLost', function () {
             if (videoEl) {
               videoEl.pause();
-            }
-          });
+}
+});
+        }, 1000);
         }
       });
 
@@ -182,8 +286,9 @@
         targets.forEach(function(target, index) {
           target.setAttribute('ar-video-controller', 'videoId: #vid' + index);
         });
-      });
-    </script>
+});
+</script>
+    
 
-  </body>
+</body>
 </html>
