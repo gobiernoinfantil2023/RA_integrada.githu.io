@@ -1,115 +1,91 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <title>Realidad Aumentada - Muestra de Arte (Optimizado iOS/Android)</title>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RA Muestra</title>
 
-    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.0.0/dist/aframe-extras.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
-    <style>
-      html, body { margin: 0; overflow: hidden; width: 100%; height: 100%; }
-      /* Botón de inicio para cumplir con la política de gestos de iOS */
-      #overlay {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.8); z-index: 9999;
-        display: flex; flex-direction: column; justify-content: center; align-items: center;
-        color: white; font-family: sans-serif; text-align: center;
-      }
-      #start-btn {
-        padding: 15px 30px; font-size: 1.2rem; cursor: pointer;
-        background: #2196F3; border: none; color: white; border-radius: 8px;
-      }
-    </style>
-  </head>
-  <body>
+  <style>
+    html, body {
+      margin: 0;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+      font-family: sans-serif;
+    }
 
-    <div id="overlay">
-      <h2>Muestra de Arte RA</h2>
-      <p>Toca el botón para activar la cámara y el audio</p>
-      <button id="start-btn">ENTRAR A LA EXPERIENCIA</button>
-    </div>
+    #startButton {
+      position: absolute;
+      z-index: 999;
+      width: 100%;
+      height: 100%;
+      background: black;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 22px;
+      cursor: pointer;
+    }
+  </style>
+</head>
 
-    <a-scene
-      mindar-image="
-        imageTargetSrc: ./targets.mind;
-        filterMinCF: 0.001;
-        filterBeta: 0.01;
-        warmupTolerance: 5;
-        missTolerance: 5;
-      "
-      color-space="sRGB"
-      renderer="colorManagement: true; physicallyCorrectLights: true"
-      vr-mode-ui="enabled: false"
-      device-orientation-permission-ui="enabled: true"
-    >
+<body>
 
-      <a-assets timeout="60000">
-        <video id="vid0"  src="./1_generaciones.mp4"  playsinline webkit-playsinline muted loop crossorigin="anonymous"></video>
-        <video id="vid1"  src="./2_abuela.mp4"        playsinline webkit-playsinline muted loop crossorigin="anonymous"></video>
-        <video id="vid2"  src="./3_adn.mp4"           playsinline webkit-playsinline muted loop crossorigin="anonymous"></video>
-        <video id="vid3"  src="./4_ciencia.mp4"       playsinline webkit-playsinline muted loop crossorigin="anonymous"></video>
-        <video id="vid4"  src="./5_familia.mp4"       playsinline webkit-playsinline muted loop crossorigin="anonymous"></video>
-        <video id="vid5"  src="./6_garabatos.mp4"     playsinline webkit-playsinline muted loop crossorigin="anonymous"></video>
-        <video id="vid6"  src="./7_hermanas.mp4"      playsinline webkit-playsinline muted loop crossorigin="anonymous"></video>
-        <video id="vid7"  src="./8_hermanos.mp4"      playsinline webkit-playsinline muted loop crossorigin="anonymous"></video>
-        <video id="vid8"  src="./9_juicio.mp4"        playsinline webkit-playsinline muted loop crossorigin="anonymous"></video>
-        <video id="vid9"  src="./10_regalo.mp4"       playsinline webkit-playsinline muted loop crossorigin="anonymous"></video>
-        <video id="vid10" src="./11_resolucion.mp4"   playsinline webkit-playsinline muted loop crossorigin="anonymous"></video>
-      </a-assets>
+<div id="startButton">TOCAR PARA INICIAR</div>
 
-      <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="far: 10000; objects: .clickable"></a-camera>
+<a-scene
+  mindar-image="imageTargetSrc: ./targets.mind;"
+  vr-mode-ui="enabled: false"
+  device-orientation-permission-ui="enabled: false"
+  renderer="colorManagement: true;"
+  embedded
+>
 
-      <a-entity mindar-image-target="targetIndex: 0"><a-plane width="1.6" height="0.9" material="shader: flat; src: #vid0"></a-plane></a-entity>
-      <a-entity mindar-image-target="targetIndex: 1"><a-plane width="1.6" height="0.9" material="shader: flat; src: #vid1"></a-plane></a-entity>
-      <a-entity mindar-image-target="targetIndex: 2"><a-plane width="1.6" height="0.9" material="shader: flat; src: #vid2"></a-plane></a-entity>
-      <a-entity mindar-image-target="targetIndex: 3"><a-plane width="0.9" height="1.6" material="shader: flat; src: #vid3"></a-plane></a-entity>
-      <a-entity mindar-image-target="targetIndex: 4"><a-plane width="1.6" height="0.9" material="shader: flat; src: #vid4"></a-plane></a-entity>
-      <a-entity mindar-image-target="targetIndex: 5"><a-plane width="0.9" height="1.6" material="shader: flat; src: #vid5"></a-plane></a-entity>
-      <a-entity mindar-image-target="targetIndex: 6"><a-plane width="1.6" height="0.9" material="shader: flat; src: #vid6"></a-plane></a-entity>
-      <a-entity mindar-image-target="targetIndex: 7"><a-plane width="1.6" height="0.9" material="shader: flat; src: #vid7"></a-plane></a-entity>
-      <a-entity mindar-image-target="targetIndex: 8"><a-plane width="1.6" height="0.9" material="shader: flat; src: #vid8"></a-plane></a-entity>
-      <a-entity mindar-image-target="targetIndex: 9"><a-plane width="1.6" height="0.9" material="shader: flat; src: #vid9"></a-plane></a-entity>
-      <a-entity mindar-image-target="targetIndex: 10"><a-plane width="1.6" height="0.9" material="shader: flat; src: #vid10"></a-plane></a-entity>
+  <a-assets>
+    <video id="vid0" src="./1_generaciones.mp4"
+      autoplay
+      muted
+      loop
+      playsinline
+      webkit-playsinline
+      crossorigin="anonymous">
+    </video>
+  </a-assets>
 
-    </a-scene>
+  <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-    <script>
-      // Componente para controlar video
-      AFRAME.registerComponent('ar-video-controller', {
-        schema: { videoId: { type: 'string' } },
-        init: function () {
-          const videoEl = document.querySelector(this.data.videoId);
-          this.el.addEventListener('targetFound', () => {
-            if (videoEl) {
-                videoEl.currentTime = 0;
-                videoEl.play();
-            }
-          });
-          this.el.addEventListener('targetLost', () => {
-            if (videoEl) videoEl.pause();
-          });
-        }
-      });
+  <a-entity mindar-image-target="targetIndex: 0">
+    <a-plane width="1.6" height="0.9"
+      material="shader: flat; src: #vid0">
+    </a-plane>
+  </a-entity>
 
-      // Lógica de inicio para iOS/Safari
-      const startBtn = document.getElementById('start-btn');
-      const overlay = document.getElementById('overlay');
+</a-scene>
 
-      startBtn.addEventListener('click', () => {
-        // Desbloquear todos los videos
-        const videos = document.querySelectorAll('video');
-        videos.forEach(v => {
-          v.play();
-          v.pause();
-        });
+<script>
+  const startButton = document.querySelector("#startButton");
+  const sceneEl = document.querySelector("a-scene");
 
-        // Ocultar overlay
-        overlay.style.display = 'none';
+  startButton.addEventListener("click", async () => {
 
-        // Inicializar controladores
-        const targets = document.querySelectorAll('[mindar-image-target]');
-        targets.forEach((target, index) => {
-          target.setAttribute('ar-video-controller', 'videoId: #vid' + index);
+    startButton.style.display = "none";
+
+    // 👉 Arranca MindAR manualmente (CLAVE para iOS)
+    const mindarSystem = sceneEl.systems["mindar-image-system"];
+    await mindarSystem.start();
+
+    // 👉 Forzar reproducción de videos
+    const videos = document.querySelectorAll("video");
+    videos.forEach(video => {
+      video.play().catch(e => console.log("Autoplay bloqueado:", e));
+    });
+
+  });
+</script>
+
+</body>
+</html>
